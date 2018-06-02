@@ -14,7 +14,7 @@
 }
 
 @property (nonatomic, retain) ATDatabase* cacheData;
-@property (nonatomic, retain) ATDatabase* userData;
+//@property (nonatomic, retain) ATDatabase* userData;
 
 +(IBCAppFacade *)getInstance;
 -(void)startup:(id)app;

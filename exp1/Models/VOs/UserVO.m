@@ -21,6 +21,7 @@
 #define kIBCKeyTotalResult @"TotalResult"
 #define kIBCKeyLastTab @"LastTab"
 #define kIBCKeyPageSize @"PageSize"
+#define kIBCKeyPageCurrent @"PageCurrent"
 //#define kIBCKeyLastAuctionDirectSearch @"LastAuctionDirectSearch"
 
 #define kIBCDefaultPageSize 50
@@ -42,6 +43,29 @@
     }
     
     return self;
+}
+
+- (NSNumber*) pageSize {
+    
+    return [[NSUserDefaults standardUserDefaults] valueForKey:kIBCKeyPageSize];
+    
+}
+
+- (void) setPageSize:(NSNumber *)pageSize {
+    
+    [[NSUserDefaults standardUserDefaults] setValue:pageSize forKey:kIBCKeyPageSize];
+    
+}
+- (NSNumber*) pageCurrent {
+    
+    return [[NSUserDefaults standardUserDefaults] valueForKey:kIBCKeyPageCurrent];
+    
+}
+
+- (void) setPageCurrent:(NSNumber *)pageCurrent {
+    
+    [[NSUserDefaults standardUserDefaults] setValue:pageCurrent forKey:kIBCKeyPageCurrent];
+    
 }
 
 

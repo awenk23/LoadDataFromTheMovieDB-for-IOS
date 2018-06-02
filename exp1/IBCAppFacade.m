@@ -24,7 +24,7 @@
 	[super initializeController];
 	[self registerCommand:kMVCStartup commandClassRef:[IBCStartupCommand class]];
     _cacheData = [[ATDatabase alloc] initWithDBName:@"MovieData" persistent:NO];
-    _userData = [[ATDatabase alloc] initWithDBName:@"MovieData" persistent:NO];
+    //_userData = [[ATDatabase alloc] initWithDBName:@"MovieData" persistent:NO];
    
 }
 

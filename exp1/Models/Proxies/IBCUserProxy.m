@@ -87,7 +87,7 @@
     self.predicateFormat = nil;
     self.predicateArguments = nil ;
     
-    self.sortKeys = @[@"title"];
+    self.sortKeys = @[@"release_date"];
     self.sortOrders = @[@NO];
     self.sortDescriptors = ATCreateSortDescriptorsWithKeys(self.sortKeys, self.sortOrders);
     
@@ -110,7 +110,7 @@
     self.predicateFormat = nil;
     self.predicateArguments = nil ;
     
-    self.sortKeys = @[@"title"];
+    self.sortKeys = @[@"release_date"];
     self.sortOrders = @[@NO];
     self.sortDescriptors = ATCreateSortDescriptorsWithKeys(self.sortKeys, self.sortOrders);
     
@@ -130,7 +130,7 @@
     
     self.jsonRequest = [[ATJSONRequest alloc] init];
     self.jsonRequest.delegate = self;
-    self.jsonRequest.input = @{ @"cmd" : kMVCURLMethodNowPlaying };
+    self.jsonRequest.input = @{ @"cmd" : kMVCURLMethodNowPlaying, @"page" : page };
     [self.jsonRequest sendPHPRequestWithParameter:param methodName:kMVCURLMethodNowPlaying urlSelf:param];
     
 }
@@ -163,22 +163,58 @@
                 NSMutableArray * dataarry = [NSMutableArray arrayWithCapacity:0];
                 dataarry = [dictionary objectForKey:@"results"];
                 
-                NSLog(@"%@",dataarry);
+//                NSLog(@"%@",dataarry);
+                if ([_user.pageCurrent intValue]<=1) {
+                    [self mergeDataWithUpdate:dataarry
+                     
+                        insertBlock:^NSManagedObject *(NSManagedObjectContext *context) {
+                            VONOWPLAYING* newNowPlaying = [NSEntityDescription insertNewObjectForEntityForName:self.entityName inManagedObjectContext:context];
+                            
+                            
+                            
+                            
+                            return newNowPlaying;
+                            
+                        }
+                        updateBlock:^(NSManagedObject *playing, NSDictionary *dictionary, NSManagedObjectContext *context) {
+                                VONOWPLAYING* newPlaying = (VONOWPLAYING*)playing;
+                            
+                            
+                            }
+                         keyBlock:^NSString *(NSDictionary *nowPlaying) {
+                            
+                            return [NSString stringWithFormat:@"%@", nowPlaying[@"id"]];
+                            
+                        } sortDescriptors:ATCreateSortDescriptorsWithKeys(@[@"id"], nil)
+                     
+                     ];
+                }else{
+                    [self appendDataWithUpdate:dataarry
+                     
+                                  insertBlock:^NSManagedObject *(NSManagedObjectContext *context) {
+                                      VONOWPLAYING* newNowPlaying = [NSEntityDescription insertNewObjectForEntityForName:self.entityName inManagedObjectContext:context];
+                                      
+                                      return newNowPlaying;
+                                      
+                                  }
+                                  updateBlock:^(NSManagedObject *playing, NSDictionary *dictionary, NSManagedObjectContext *context) {
+                                      VONOWPLAYING* newPlaying = (VONOWPLAYING*)playing;
+                                      
+                                      
+                                      
+                                      
+                                  }
+                                     keyBlock:^NSString *(NSDictionary *nowPlaying) {
+                                         
+                                         return [NSString stringWithFormat:@"%@", nowPlaying[@"id"]];
+                                         
+                                     } sortDescriptors:ATCreateSortDescriptorsWithKeys(@[@"id"], nil)
+                     
+                     ];
+                }
                 
-                [self mergeData:dataarry
-                 
-                              insertBlock:^NSManagedObject *(NSManagedObjectContext *context) {
-                                  VONOWPLAYING* newNowPlaying = [NSEntityDescription insertNewObjectForEntityForName:self.entityName inManagedObjectContext:context];
-                                  
-                                  return newNowPlaying;
-                                  
-                              }  keyBlock:^NSString *(NSDictionary *nowPlaying) {
-                                  
-                                  return [NSString stringWithFormat:@"%@", nowPlaying[@"id"]];
-                                  
-                              } sortDescriptors:ATCreateSortDescriptorsWithKeys(@[@"id"], nil)
-                 
-                 ];
+                
+                _user.pageCurrent = [jsonRequest.input objectForKey:@"page"];
                 
                 [facade sendNotification:kMVCNowPlayingSucces body:dictionary];
                 return;
@@ -188,8 +224,8 @@
                 
         }
         else  if ([[jsonRequest.input objectForKey:@"cmd"] isEqualToString:kMVCURLMethodSimiliar]) {
-            NSLog(@"%@",dictionary);
-                            
+//            NSLog(@"%@",dictionary);
+            
                 if (successful) {
                     
                     self.entityName=@"VOMOVSIMILIAR";
@@ -208,18 +244,7 @@
                      
                      } updateBlock:^(NSManagedObject *similiar, NSDictionary *dictionary, NSManagedObjectContext *context) {
                      VOMOVSIMILIAR* newSimiliar = (VOMOVSIMILIAR*)similiar;
-//                         newSimiliar.page = [dictionary objectForKey:@"page"];
-//                         newSimiliar.total_pages;
-//                         newSimiliar.total_results;
-                         
-                         //result
-                         newSimiliar.backdrop_path= [[dictionary objectForKey:@"backdrop_path"] isKindOfClass:[NSNull class]]?@"":[dictionary objectForKey:@"backdrop_path"];
-                         newSimiliar.original_language= [[dictionary objectForKey:@"original_language"] isKindOfClass:[NSNull class]]?@"":[dictionary objectForKey:@"original_language"];;
-                         newSimiliar.original_title= [[dictionary objectForKey:@"original_title"] isKindOfClass:[NSNull class]]?@"":[dictionary objectForKey:@"original_title"];;
-                         newSimiliar.overview= [[dictionary objectForKey:@"overview"] isKindOfClass:[NSNull class]]?@"":[dictionary objectForKey:@"overview"];;
-                         newSimiliar.release_date= [[dictionary objectForKey:@"release_date"] isKindOfClass:[NSNull class]]?@"":[dictionary objectForKey:@"release_date"];;
-                         newSimiliar.poster_path= [[dictionary objectForKey:@"negaraDomisili"] isKindOfClass:[NSNull class]]?@"":[dictionary objectForKey:@"poster_path"];;
-                         newSimiliar.title= [[dictionary objectForKey:@"title"] isKindOfClass:[NSNull class]]?@"":[dictionary objectForKey:@"title"];;
+
                      
                      
                      } keyBlock:^NSString *(NSDictionary *similiar) {
@@ -235,12 +260,7 @@
                 }
             [facade sendNotification:kMVCSimiliarSucces];
             }
-        else {
-
-            NSString* message = [NSString stringWithFormat:@"User ID and Password is incorrect"];
-            
-            //[[[UIAlertView alloc] initWithTitle:@"Login Fail" message: message delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
-        }
+        
         
     
     }

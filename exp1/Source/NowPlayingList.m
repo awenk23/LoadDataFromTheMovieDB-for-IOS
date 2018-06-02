@@ -14,6 +14,7 @@
 #import "UIImageView+WebCache.h"
 #import "IBCAppFacade.h"
 #import "DetailSimiliarUI.h"
+#import "UserVO.h"
 
 #define baseUrlImage @"https://image.tmdb.org/t/p/w500"
 @interface NowPlayingList ()<UITableViewDelegate,UITableViewDataSource>
@@ -45,7 +46,14 @@
     if (![self.facade hasMediator:self.mediatorName]) {
         [self.facade registerMediator:self];
     }
-    [self performRefresh];
+    [self performFetch];
+    if(_fetchedData.fetchedObjects.count==0){
+        IBCUserProxy * proxy = (IBCUserProxy*)[facade retrieveProxy:[IBCUserProxy NAME]];
+        UserVO * user =  [proxy data];
+        user.pageCurrent = @0;
+        [self performRefresh];
+    }
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -66,6 +74,9 @@
 -(void)handleNotification:(id<INotification>)notification {
     
     if ([[notification name] isEqualToString:[IBCUserProxy NOWPLAYING_SUCCESS]]) {
+        if (self.popupView) {
+            [self.popupView remove];
+        }
         
         if ([notification body]) {
             [self performFetch];
@@ -102,7 +113,7 @@
     cell.loadingIndicator.progress = 0;
    
     NSString* urlImage = [NSString stringWithFormat:@"%@%@",baseUrlImage,nowPlaying.poster_path] ;
-    NSLog(@"%@",urlImage);
+//    NSLog(@"%@",urlImage);
     [cell.imgCell sd_setImageWithURL:[NSURL URLWithString:urlImage] placeholderImage:[UIImage imageNamed:@"placeholder"] options:SDWebImageProgressiveDownload
                             progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL *targetURL) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -152,51 +163,37 @@
     similiarUI.idMov = nowPlaying.id;
     
     [self.navigationController pushViewController:similiarUI animated:YES];
-    /*
-     // If selected cell is a lookup view
-     if ([_textNominal.text intValue] < 50000 ){//}&& ![bank.nama isEqualToString:@"Cash"]) {
-     NSString * msg = @"Minimimal TopUp 50.000";
-     
-     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Info" message:msg preferredStyle:UIAlertControllerStyleAlert];
-     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-     //            [self dismissViewControllerAnimated:YES completion:nil];
-     }];
-     [alert addAction:okAction];
-     [self presentViewController:alert animated:YES completion:nil];
-     }else{
-     
-     if ([bank.nama isEqualToString:@"Cash"]) {
-     UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"masukanPin", fileLocalize, localizeBundle(), nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"batal", fileLocalize, localizeBundle(), nil) otherButtonTitles:@"OK", nil];
-     //    UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:@"Masukkan Pin" message:@"" delegate:self cancelButtonTitle:@"BATAL" otherButtonTitles:@"OK", nil];
-     [dialog setAlertViewStyle:UIAlertViewStyleSecureTextInput];
-     
-     // Change keyboard type
-     [[dialog textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeNumberPad];
-     [[dialog textFieldAtIndex:0] setPlaceholder:NSLocalizedStringFromTableInBundle(@"isiPin", fileLocalize, localizeBundle(), nil)];
-     //    [[dialog textFieldAtIndex:0] setPlaceholder:@"Masukkan Pin"];
-     [dialog show];
-     //            [facade sendNotification:[PTMainFormUI SHOW_SETOR_TUNAI]];
-     }else{
-     
-     
-     
-     [facade sendNotification:[PTMainFormUI ShOW_TOPUPREQUESTED] body:bank type:_textNominal.text];
-     }
-     }
-     
-     */
-    UIButton *button = (UIButton *)cell.accessoryView;
-    button.selected = YES;
-    //[tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Need to call the service & update the array
+    if(indexPath.row + 1 == _fetchedData.fetchedObjects.count) {
+        
+        [self loadMore];
+    }
 }
 
 
 #pragma mark - private method
 -(void)performRefresh{
-    IBCUserProxy * proxy = (IBCUserProxy*)[self.facade retrieveProxy:[IBCUserProxy NAME]];
-    [proxy getNowPlaying:@"1"];
     
+    IBCUserProxy * proxy = (IBCUserProxy*)[self.facade retrieveProxy:[IBCUserProxy NAME]];
+    UserVO * user = [proxy data];
+    user.pageCurrent = @0;
+    [self loadMore];
+}
+
+-(void)loadMore{
+    
+    if (self.popupView.isRunning) return;
+    self.popupView = [[ATPopupView alloc] initWithCenter:self.view.center text:@"Loading..."];
+    [self.view addSubview:self.popupView];
+    
+    IBCUserProxy * proxy = (IBCUserProxy*)[self.facade retrieveProxy:[IBCUserProxy NAME]];
+    UserVO * user = [proxy data];
+    int pageToLoad = [user.pageCurrent intValue]==0?1:[user.pageCurrent intValue]+1;
+    [proxy getNowPlaying:[NSString stringWithFormat:@"%d",pageToLoad]];
 }
 
 -(void)performFetch{
@@ -208,7 +205,6 @@
     
     _fetchedData = fetchedData;
     VONOWPLAYING *nowPlaying = [fetchedData.fetchedObjects objectAtIndex:0];
-    
     
     [self.tableView reloadData];
     

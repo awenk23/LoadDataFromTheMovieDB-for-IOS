@@ -10,6 +10,7 @@
 
 @interface UserVO : NSObject
 
-
+@property (nonatomic, retain) NSNumber* pageSize;
+@property (nonatomic, retain) NSNumber* pageCurrent;
 
 @end

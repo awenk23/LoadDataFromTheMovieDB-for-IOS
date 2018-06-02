@@ -183,7 +183,7 @@
     _lblDesc.text = _desc;
     
     NSString* urlImage = [NSString stringWithFormat:@"%@%@",baseUrlImage,_posterPath] ;
-    NSLog(@"%@",urlImage);
+//    NSLog(@"%@",urlImage);
     [_imgPoster sd_setImageWithURL:[NSURL URLWithString:urlImage] placeholderImage:[UIImage imageNamed:@"placeholder"] options:SDWebImageProgressiveDownload
                             progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL *targetURL) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -235,7 +235,7 @@
         cell.loadingIndicator.progress = 0;
         
         NSString* urlImage = [NSString stringWithFormat:@"%@%@",baseUrlImage,similiar.poster_path] ;
-        NSLog(@"%@",urlImage);
+        //NSLog(@"%@",urlImage);
         [cell.imgCell sd_setImageWithURL:[NSURL URLWithString:urlImage] placeholderImage:[UIImage imageNamed:@"placeholder"] options:SDWebImageProgressiveDownload
                                 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL *targetURL) {
                                     dispatch_async(dispatch_get_main_queue(), ^{
