@@ -52,6 +52,10 @@
                 value = [value stringValue];
             } else if ([typeClassName isEqualToString:@"NSNumber"] && [value isKindOfClass:[NSString class]]) {
                 value = [NSNumber numberWithInteger:value];
+            } else if ([typeClassName isEqualToString:@"NSString"] && [value isKindOfClass:[NSNull class]]) {
+                value = @"";
+            } else if ([typeClassName isEqualToString:@"NSNumber"] && [value isKindOfClass:[NSNull class]]) {
+                value = @"0";
             }
             
             [self setValue:value forKey:key];
@@ -89,7 +93,12 @@
         if ((attributeType == NSStringAttributeType) && ([value isKindOfClass:[NSNumber class]])) {
             value = [value stringValue];
         
-        } else if (((attributeType == NSInteger16AttributeType) || (attributeType == NSInteger32AttributeType) || (attributeType == NSInteger64AttributeType) || (attributeType == NSBooleanAttributeType)) && ([value isKindOfClass:[NSString class]])) {
+        }
+        else if ((attributeType == NSStringAttributeType) && ([value isKindOfClass:[NSNull class]])) {
+            value = @"";
+            
+        }
+        else if (((attributeType == NSInteger16AttributeType) || (attributeType == NSInteger32AttributeType) || (attributeType == NSInteger64AttributeType) || (attributeType == NSBooleanAttributeType)) && ([value isKindOfClass:[NSString class]])) {
             value = [NSNumber numberWithInteger:[value integerValue]];
         
         } else if ((attributeType == NSFloatAttributeType) &&  ([value isKindOfClass:[NSString class]])) {

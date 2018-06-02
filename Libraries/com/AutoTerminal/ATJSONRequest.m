@@ -69,7 +69,7 @@
         jsonQuery = [jsonQuery stringByReplacingOccurrencesOfString:@"&" withString:@"%26"];
         jsonQuery = [jsonQuery stringByReplacingOccurrencesOfString:@"+" withString:@"%2B"];
 
-        NSLog(@"%@", jsonQuery);
+        //NSLog(@"%@", jsonQuery);
         
         postData = [jsonQuery dataUsingEncoding:NSUTF8StringEncoding];
     }
@@ -102,7 +102,7 @@
     cmdParam = [cmdParam stringByReplacingOccurrencesOfString:@"+" withString:@"%2B"];
     
     NSURL* url = [NSURL URLWithString:urlAssign];
-    NSLog(@"%@",url);
+    //NSLog(@"%@",url);
     
     NSMutableURLRequest *httpRequest = [[NSMutableURLRequest alloc] init];
     [httpRequest setURL:url];
@@ -171,7 +171,7 @@
             //-- for debug
             NSData* jsonData = [NSJSONSerialization dataWithJSONObject:headerData options:NSJSONWritingPrettyPrinted error:&error];
             
-            NSLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
+            //NSLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
             //-- end debug
             
             resultSet = headerData;
