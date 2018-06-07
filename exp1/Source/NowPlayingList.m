@@ -33,7 +33,6 @@
      UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadData:)];
     self.navigationItem.rightBarButtonItem = refreshButton;
     
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,6 +60,7 @@
     if ([self.facade hasMediator:self.mediatorName]) {
         [self.facade removeMediator:self.mediatorName];
     }
+    
 }
 
 #pragma mark - IMediator implementations

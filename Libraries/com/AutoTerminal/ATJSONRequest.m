@@ -106,8 +106,11 @@
     
     NSMutableURLRequest *httpRequest = [[NSMutableURLRequest alloc] init];
     [httpRequest setURL:url];
-    [httpRequest setHTTPMethod:@"GET"];
-    [httpRequest setValue: @"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [httpRequest setHTTPMethod:_method];
+    if ([_method isEqualToString:@"POST"]) {
+        [httpRequest setValue: @"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    }
+    
     
     //form-data block
     NSMutableData *postData = [NSMutableData data];

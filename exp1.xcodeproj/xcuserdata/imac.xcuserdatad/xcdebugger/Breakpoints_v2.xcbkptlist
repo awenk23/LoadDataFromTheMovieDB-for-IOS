@@ -90,7 +90,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "exp1/Source/NowPlayingList.m"
-            timestampString = "550068080.571694"
+            timestampString = "550088901.49877"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "173"
@@ -105,13 +105,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "exp1/Source/DetailSimiliarUI.m"
-            timestampString = "550068080.57179"
+            filePath = "Libraries/com/AutoTerminal/ATJSONRequest.m"
+            timestampString = "550088903.597309"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
-            landmarkName = "-performRefresh"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
+            landmarkName = "-sendPHPRequestWithParameter:methodName:urlSelf:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -131,7 +131,7 @@
     self.jsonRequest = [[ATJSONRequest alloc] init];
     self.jsonRequest.delegate = self;
     self.jsonRequest.input = @{ @"cmd" : kMVCURLMethodNowPlaying, @"page" : page };
-    [self.jsonRequest sendPHPRequestWithParameter:param methodName:kMVCURLMethodNowPlaying urlSelf:param];
+    [self.jsonRequest sendPHPRequestWithParameter:param methodName:@"POST" urlSelf:param];
     
 }
      
@@ -142,7 +142,7 @@
     self.jsonRequest = [[ATJSONRequest alloc] init];
     self.jsonRequest.delegate = self;
     self.jsonRequest.input = @{ @"cmd" : kMVCURLMethodSimiliar };
-    [self.jsonRequest sendPHPRequestWithParameter:param methodName:kMVCURLMethodSimiliar urlSelf:param];
+    [self.jsonRequest sendPHPRequestWithParameter:param methodName:@"GET" urlSelf:param];
 
     
 }
