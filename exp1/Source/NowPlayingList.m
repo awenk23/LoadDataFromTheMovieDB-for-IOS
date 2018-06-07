@@ -204,7 +204,7 @@
 -(void) didFetch:(NSFetchedResultsController *)fetchedData {
     
     _fetchedData = fetchedData;
-    VONOWPLAYING *nowPlaying = [fetchedData.fetchedObjects objectAtIndex:0];
+    //VONOWPLAYING *nowPlaying = [fetchedData.fetchedObjects objectAtIndex:0];
     
     [self.tableView reloadData];
     

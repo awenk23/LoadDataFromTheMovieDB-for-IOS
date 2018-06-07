@@ -182,6 +182,7 @@
     _lblRelease.text = _releaseDate;
     _lblDesc.text = _desc;
     
+    
     NSString* urlImage = [NSString stringWithFormat:@"%@%@",baseUrlImage,_posterPath] ;
 //    NSLog(@"%@",urlImage);
     [_imgPoster sd_setImageWithURL:[NSURL URLWithString:urlImage] placeholderImage:[UIImage imageNamed:@"placeholder"] options:SDWebImageProgressiveDownload
