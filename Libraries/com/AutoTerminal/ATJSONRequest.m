@@ -109,17 +109,15 @@
     [httpRequest setHTTPMethod:_method];
     if ([_method isEqualToString:@"POST"]) {
         [httpRequest setValue: @"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    
+        //form-data block
+        NSMutableData *postData = [NSMutableData data];
+        //    NSString* param=[NSString stringWithFormat:@"%@=%@", @"cmd", cmdParam];
+        //    NSLog(@"%@",param);
+        [postData appendData:[cmdParam dataUsingEncoding:NSUTF8StringEncoding]];
+        [httpRequest setHTTPBody:postData];
+        [httpRequest setTimeoutInterval:900];
     }
-    
-    
-    //form-data block
-    NSMutableData *postData = [NSMutableData data];
-    //    NSString* param=[NSString stringWithFormat:@"%@=%@", @"cmd", cmdParam];
-    //    NSLog(@"%@",param);
-    [postData appendData:[cmdParam dataUsingEncoding:NSUTF8StringEncoding]];
-    [httpRequest setHTTPBody:postData];
-    [httpRequest setTimeoutInterval:900];
-    
     // send request, get response
     dispatch_async(kBgQueue, ^{
         //NSData* data = [NSData dataWithContentsOfURL:kLoginURL];
